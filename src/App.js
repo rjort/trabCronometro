@@ -1,26 +1,34 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route
+} from 'react-router-dom';
 
-function App() {
+import LabelBottomNavigation from './components/LabelBottomNavigation';
+
+import Clock from './pages/Clock';
+import Chronometer from './pages/Chronometer';
+import Timer from './pages/Timer';
+
+export default function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Router>
+        <Switch>
+          <Route exact path="/">
+            <Clock/>
+          </Route>
+          <Route path="/chronometer">
+            <Chronometer/>
+          </Route>
+          <Route path="/timer">
+            <Timer/>
+          </Route>
+        </Switch>
+        <LabelBottomNavigation/>
+      </Router>
     </div>
   );
 }
-
-export default App;
