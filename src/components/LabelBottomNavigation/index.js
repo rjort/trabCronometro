@@ -9,11 +9,11 @@ import AccessAlarmIcon from '@material-ui/icons/AccessAlarm';
 import TimerIcon from '@material-ui/icons/Timer';
 
 const useStyles = makeStyles({
-    stickToBottom: {
-        width: '100%',
-        position: 'fixed',
-        bottom: 0,
-    },
+  stickToBottom: {
+    width: '100%',
+    position: 'fixed',
+    bottom: 0,
+  },
 });
 
 export default function LabelBottomNavigation() {
