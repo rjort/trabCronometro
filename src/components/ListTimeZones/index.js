@@ -6,6 +6,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import AccessTimeIcon from '@material-ui/icons/AccessTime';
 import DeleteIcon from '@material-ui/icons/Delete';
+import IconButton from "@material-ui/core/IconButton";
 import Divider from '@material-ui/core/Divider';
 
 import ListItemClockDisplay from '../ListItemClockDisplay';
@@ -28,7 +29,12 @@ export default function ListTimeZones({selectedTimeZones, onDelete}) {
                             <ListItemText primary={timeZone.label} secondary={timeZone.value}/>
                             <ListItemClockDisplay timeZone={timeZone.value}/>
                             <ListItemIcon onClick={() => handleDelete(index)}>
-                                <DeleteIcon/>
+                                <IconButton
+                                color="inherit"
+                                aria-label="mode"
+                                >
+                                    <DeleteIcon/>
+                                </IconButton>
                             </ListItemIcon>
                         </ListItem>
                     </div>
