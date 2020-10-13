@@ -19,5 +19,8 @@ export function dateTimeNowByTimeZone(timeZone) {
 }
 
 export function differenceLocalByTimeZone(timeZone) {
-    return DateTime.local().setZone(timeZone).toFormat('HH') - DateTime.local().toFormat('HH');
+    let now = DateTime.local();
+    let dateLocal = DateTime.fromObject(now.toObject());
+    let otherDate = DateTime.fromObject(now.setZone(timeZone).toObject());
+    return otherDate.diff(dateLocal, 'hours').toObject().hours;
 }

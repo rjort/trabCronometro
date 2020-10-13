@@ -41,7 +41,7 @@ export default function ClockList() {
 
     return (
         <div>
-            <Fab color="primary" aria-label="add" onClick={handleClickOpen}>
+            <Fab color="primary" variant="outlined" aria-label="add" onClick={handleClickOpen}>
                 <AddIcon />
             </Fab>
             <ListTimeZonesDialog selectedValue={selectedValue} open={open} onClose={handleClose} />
