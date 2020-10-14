@@ -1,14 +1,12 @@
 import React, {useState, useEffect} from 'react';
 import {dateTimeNowByTimeZone, differenceLocalByTimeZone} from '../componentsUtils';
 
-import ListItemText from '@material-ui/core/ListItemText';
+import Typography from '@material-ui/core/Typography';
 
-export default function ListItemClockDisplay({timeZone}) {
+
+export default function TypographyClockDisplay({timeZone, align}) {
     const diffLocal = differenceLocalByTimeZone(timeZone);
-    const textDiff = `
-        Difference: 
-        ${diffLocal === 1 || diffLocal === -1 ? diffLocal + ' hour' : diffLocal + ' hours'}
-    `;
+    const textDiff = `${diffLocal === 1 || diffLocal === -1 ? diffLocal + ' hour' : diffLocal + ' hours'}`;
 
     const [time, setTime] = useState(dateTimeNowByTimeZone(timeZone).time);
 
@@ -21,8 +19,9 @@ export default function ListItemClockDisplay({timeZone}) {
     }, [timeZone]);
 
     return (
-        <ListItemText 
-        primary={time} 
-        secondary={textDiff}/>
+        <>
+            <Typography variant="body1" align={align} noWrap>{time}</Typography>
+            <Typography variant="body2" align={align} noWrap>{textDiff}</Typography>
+        </>
     );
 }

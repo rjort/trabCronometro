@@ -25,7 +25,7 @@ export default function App() {
       <Router>
         <ThemeProvider theme={appliedTheme}>
           <CssBaseline />
-          <Container maxWidth="sm">
+          <Container maxWidth="md">
             <IconButton
               color="inherit"
               aria-label="mode"

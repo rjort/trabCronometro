@@ -3,7 +3,7 @@ import React, {useState} from 'react';
 import Fab from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/Add';
 
-import ListTimeZones from '../ListTimeZones';
+import TableTimeZones from '../TableTimeZones';
 import ListTimeZonesDialog from '../ListTimeZonesDialog';
 
 export default function ClockList() {
@@ -45,7 +45,7 @@ export default function ClockList() {
                 <AddIcon />
             </Fab>
             <ListTimeZonesDialog selectedValue={selectedValue} open={open} onClose={handleClose} />
-            <ListTimeZones selectedTimeZones={selectedTimeZones} onDelete={handleDelete}/>
+            <TableTimeZones selectedTimeZones={selectedTimeZones} onDelete={handleDelete}/>
         </div>
     );
 }
