@@ -25,6 +25,10 @@ export function differenceLocalByTimeZone(timeZone) {
     return otherDate.diff(dateLocal, 'hours').toObject().hours;
 }
 
+export function decrementMillisecondsFromTime(time, milliseconds = 10) {
+    return DateTime.fromISO(time).minus({milliseconds: milliseconds}).toFormat('HH:mm:ss.SSS').substr(0, 11)
+}
+
 export function incrementMillisecondsFromTime(time, milliseconds = 10) {
     return DateTime.fromISO(time).plus({milliseconds: milliseconds}).toFormat('HH:mm:ss.SSS').substr(0, 11);
 }
