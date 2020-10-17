@@ -1,66 +1,48 @@
-import React, { useState, useRef, useEffect } from 'react';
-import {decrementMillisecondsFromTime} from '../componentsUtils';
+import React, {useState, useRef} from 'react'
 
-import Typography from '@material-ui/core/Typography';
-import Fab from '@material-ui/core/Button';
-import PlayArrowIcon from '@material-ui/icons/PlayArrow';
-import PauseIcon from '@material-ui/icons/Pause';
-import ReplayIcon from '@material-ui/icons/Replay';
-// import FlagIcon from '@material-ui/icons/Flag';
+import {decrementSecondsFromTime} from '../componentsUtils'
+import sound from '../../sounds/alert.mp3'
 
-export default function TimerDisplay({seconds = 60}) {
+import Typography from '@material-ui/core/Typography'
+import Fab from '@material-ui/core/Button'
+import PlayArrowIcon from '@material-ui/icons/PlayArrow'
+import PauseIcon from '@material-ui/icons/Pause'
+import ReplayIcon from '@material-ui/icons/Replay'
+import TextField from '@material-ui/core/TextField'
+import Alert from '@material-ui/lab/Alert'
 
-  const [timeLeft, setTimeLeft] = useState('00:00');
+export default function TimerDisplay() {
+  const [timer, setTimer] = useState('00:00:00')
+  const [text, setText] = useState('00:00:00')
   const [isStarted, setIsStarted] = useState(false)
   const [isPaused, setIsPaused] = useState(false)
+  const [alert, setAlert] = useState(false)
   const decrement = useRef(null)
 
-    const now = Date.now();
-    const then = now + seconds * 1000;
+  const audio = new Audio(sound)
 
-    const countDown = setInterval(() => {
-        const secondsLeft = Math.round((then - Date.now()) / 1000);
-        if(secondsLeft <= 0) {
-            clearInterval(countDown);
-            console.log('done!');
-            console.log(countDown)
-            return;
+  const decrementTimer = () => {
+    return setInterval(() => {
+      setTimer((prevTimer) => {
+        if(prevTimer === '00:00:00'){
+          clearInterval(decrement.current)
+          setIsPaused(false)
+          setIsStarted(false)
+          setAlert(true)
+          audio.play()
+          return prevTimer
+        } else {
+          return decrementSecondsFromTime(prevTimer)
         }
-        displayTimeLeft(secondsLeft);
-    }, 1000);
+      })
+    }, 1000)
+  }
 
-    const displayTimeLeft = seconds => {
-        let minutesLeft = Math.floor(seconds/60) ;
-        let secondsLeft = seconds % 60;
-        minutesLeft = minutesLeft.toString().length === 1 ? "0" + minutesLeft : minutesLeft;
-        secondsLeft = secondsLeft.toString().length === 1 ? "0" + secondsLeft : secondsLeft;
-        return `${minutesLeft}:${secondsLeft}`;
-    }
-
-    useEffect(() => {
-        setInterval(() => {
-            setTimeLeft(displayTimeLeft(seconds));
-        }, 1000);
-    }, [seconds])
-
-
-//
-///*  const decrementTimer = useEffect(() => {
-//    const decTimer = timer > 0 && setInterval(() => setTimer(timer - 1), 1000)
-//    return () => clearInterval(decTimer)
-//  }, [timer])
-//*/
-//
-//  const decrementTimer = () => {
-//    return setInterval(() => {
-//      setTimer((timer) => decrementMillisecondsFromTime(timer))
-//    }, 10)
-//  }
-//
   const handleStart = () => {
     setIsStarted(true)
     setIsPaused(true)
-    decrement.current = countDown
+    handleClose()
+    decrement.current = decrementTimer()
   }
 
   const handlePause = () => {
@@ -68,35 +50,61 @@ export default function TimerDisplay({seconds = 60}) {
     setIsPaused(false)
   }
 
+  const handleResume = () => {
+    setIsPaused(true)
+    decrement.current = decrementTimer()
+  }
+
   const handleReset = () => {
     clearInterval(decrement.current)
-    setIsPaused(false)
     setIsStarted(false)
-//    setTimer("00:00:60")
+    setIsPaused(false)
+    setTimer(text)
   }
-//
-  return(
+
+  const handleClose = () => {
+    console.log(audio)
+    audio.pause()
+    audio.currentTime = 0
+    setAlert(false)
+  }
+
+  return (
     <div>
-      <Typography variant="h1" noWrap>Countdown: {timeLeft}</Typography>
+      {
+      alert &&
+      <Alert onClose={ handleClose }>
+        Timeout!
+      </Alert>
+      }
+      <TextField
+        label="Time"
+        type="timer"
+        value={text}
+        onChange={value => setText(value.target.value)}
+        onBlur={() => setTimer(text)}
+      >
+      </TextField>
+      <Typography variant="h1" noWrap>{timer}</Typography>
       {
         !isStarted && !isPaused ?
         <Fab color="primary" variant="outlined" style={{margin: 2}} onClick={handleStart}>
-          <PlayArrowIcon/>
+            <PlayArrowIcon/>
         </Fab>
         : (
           isPaused ?
           <>
             <Fab color="primary" variant="outlined" style={{margin: 2}} onClick={handlePause}>
               <PauseIcon/>
-            </Fab>
+            </Fab> 
           </>
-          :
-          <Fab color="primary" variant="outlined" style={{margin: 2}} onClick={handleStart}>
+          : 
+          <Fab color="primary" variant="outlined" style={{margin: 2}} onClick={handleResume}>
             <PlayArrowIcon/>
-          </Fab>
+          </Fab> 
         )
       }
-      <Fab  color="primary" variant="outlined" style={{margin: 2}} onClick={handleReset}>
+      <Fab color="primary" variant="outlined" style={{margin: 2}} onClick={handleReset}>
         <ReplayIcon/>
       </Fab>
     </div>
