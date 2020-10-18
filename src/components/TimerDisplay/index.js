@@ -2,6 +2,7 @@ import React, {useState, useRef} from 'react'
 
 import {decrementSecondsFromTime} from '../componentsUtils'
 import sound from '../../sounds/alert.mp3'
+import InputMask from 'react-input-mask'
 
 import Typography from '@material-ui/core/Typography'
 import Fab from '@material-ui/core/Button'
@@ -18,8 +19,7 @@ export default function TimerDisplay() {
   const [isPaused, setIsPaused] = useState(false)
   const [alert, setAlert] = useState(false)
   const decrement = useRef(null)
-
-  const audio = new Audio(sound)
+  const audio = useRef(new Audio(sound))
 
   const decrementTimer = () => {
     return setInterval(() => {
@@ -29,7 +29,7 @@ export default function TimerDisplay() {
           setIsPaused(false)
           setIsStarted(false)
           setAlert(true)
-          audio.play()
+          audio.current.play()
           return prevTimer
         } else {
           return decrementSecondsFromTime(prevTimer)
@@ -60,12 +60,12 @@ export default function TimerDisplay() {
     setIsStarted(false)
     setIsPaused(false)
     setTimer(text)
+    handleClose()
   }
 
   const handleClose = () => {
-    console.log(audio)
-    audio.pause()
-    audio.currentTime = 0
+    audio.current.pause()
+    audio.current.currentTimecurrentTime = 0
     setAlert(false)
   }
 
@@ -77,14 +77,15 @@ export default function TimerDisplay() {
         Timeout!
       </Alert>
       }
-      <TextField
-        label="Time"
-        type="timer"
+      <InputMask
+        mask="99:99:99"
+        maskChar="0"
         value={text}
         onChange={value => setText(value.target.value)}
         onBlur={() => setTimer(text)}
       >
-      </TextField>
+        {() => <TextField label="Time" type="text" margin="dense"/>}
+      </InputMask>
       <Typography variant="h1" noWrap>{timer}</Typography>
       {
         !isStarted && !isPaused ?
