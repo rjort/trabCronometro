@@ -1,4 +1,8 @@
-import {DateTime} from 'luxon';
+import {DateTime, Duration} from 'luxon';
+
+function addDigitIfIsLessThanTen(value) {
+    return value < 10 ? `0${value}` : value;
+}
 
 export function dateTimeNow() {
     let dateTime = DateTime.local();
@@ -26,7 +30,9 @@ export function differenceLocalByTimeZone(timeZone) {
 }
 
 export function decrementSecondsFromTime(time, seconds = 1) {
-    return DateTime.fromISO(time).minus({seconds: seconds}).toFormat('HH:mm:ss')
+    const timeArray = time.match(/(\d+)/g);
+    const newTime = Duration.fromObject({hours: timeArray[0], minutes: timeArray[1], seconds: timeArray[2]}).minus({seconds: seconds}).toObject();
+    return `${addDigitIfIsLessThanTen(newTime.hours)}:${addDigitIfIsLessThanTen(newTime.minutes)}:${addDigitIfIsLessThanTen(newTime.seconds)}`;
 }
 
 export function incrementMillisecondsFromTime(time, milliseconds = 10) {
@@ -34,15 +40,11 @@ export function incrementMillisecondsFromTime(time, milliseconds = 10) {
 }
 
 export function getDiffByTwoTimes(time1, time2) {
-    function addDigitIfIsLessThanThen(value) {
-        return value < 10 ? `0${value}` : value;
-    }
-
     const diff = DateTime.fromISO(time1).diff(DateTime.fromISO(time2), ['hours', 'minutes', 'seconds', 'milliseconds']).toObject();
     
     if (diff.hours === undefined) {
         return time1;
     }
 
-    return `${addDigitIfIsLessThanThen(diff.hours)}:${addDigitIfIsLessThanThen(diff.minutes)}:${addDigitIfIsLessThanThen(diff.seconds)}.${addDigitIfIsLessThanThen(diff.milliseconds)}`;
+    return `${addDigitIfIsLessThanTen(diff.hours)}:${addDigitIfIsLessThanTen(diff.minutes)}:${addDigitIfIsLessThanTen(diff.seconds)}.${addDigitIfIsLessThanTen(diff.milliseconds)}`;
 }
